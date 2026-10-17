@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kasir · Bean's PC & Lintang's Taylor</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2316243A'/><path d='M9 10h14M9 16h14M9 22h8' stroke='white' stroke-width='2.4' stroke-linecap='round'/></svg>" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable@14.6.1/dist/handsontable.full.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/handsontable@14.6.1/dist/handsontable.full.min.js"></script>
+
+  <link rel="stylesheet" href="/css/base.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/grid.css" />
+  <link rel="stylesheet" href="/css/print.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name">Kasir</span>
+      </div>
+
+      <nav class="tabs" aria-label="Menu utama">
+        <a href="#nota" class="tab" data-view="nota">Nota</a>
+        <a href="#riwayat" class="tab" data-view="riwayat">Riwayat</a>
+      </nav>
+
+      <span id="storage-badge" class="badge" hidden></span>
+    </header>
+
+    <main>
+      <!-- ============ NOTA ============ -->
+      <section id="view-nota" class="view" hidden>
+        <div class="workspace">
+          <div class="sheet">
+            <div class="sheet-head">
+              <div class="field">
+                <label for="f-tanggal">Tanggal</label>
+                <input type="date" id="f-tanggal" required />
+              </div>
+              <div class="field field--grow">
+                <label for="f-pelanggan">Pelanggan</label>
+                <input type="text" id="f-pelanggan" placeholder="Nama pelanggan" autocomplete="off" />
+              </div>
+              <div class="field">
+                <span class="label">No. nota</span>
+                <output id="f-nomor" class="nomor">Dibuat saat disimpan</output>
+              </div>
+            </div>
+
+            <div id="editing-banner" class="editing-banner" hidden>
+              <span id="editing-text"></span>
+              <button type="button" class="link" data-action="new">Batal ubah</button>
+            </div>
+
+            <div class="grid-wrap">
+              <div id="grid"></div>
+            </div>
+
+            <div class="grid-foot">
+              <button type="button" class="btn btn--quiet" id="btn-add-row">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg>
+                Tambah baris
+              </button>
+              <span class="hint">Tempel langsung dari Excel. Klik kanan untuk sisip atau hapus baris.</span>
+            </div>
+
+            <div class="field">
+              <label for="f-catatan">Catatan</label>
+              <textarea id="f-catatan" rows="3" placeholder="Garansi, janji ambil, ukuran, dan lain-lain"></textarea>
+            </div>
+          </div>
+
+          <aside class="checkout" aria-label="Pembayaran">
+            <h2 class="checkout-title">Terbitkan sebagai</h2>
+            <div id="store-picker" class="store-picker" role="radiogroup" aria-label="Pilih toko"></div>
+
+            <dl class="summary">
+              <div class="summary-row">
+                <dt>Subtotal</dt>
+                <dd id="s-subtotal">Rp 0</dd>
+              </div>
+              <div class="summary-row">
+                <dt><label for="f-diskon">Diskon</label></dt>
+                <dd>
+                  <input id="f-diskon" class="diskon-input" inputmode="decimal" placeholder="0 atau 10%" autocomplete="off" />
+                  <small id="s-diskon-hint" class="diskon-hint"></small>
+                </dd>
+              </div>
+              <div class="summary-row summary-row--total">
+                <dt>Total</dt>
+                <dd id="s-total">Rp 0</dd>
+              </div>
+            </dl>
+
+            <div class="actions">
+              <button type="button" class="btn btn--primary" data-action="save-print">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 8V3h8v5M6 14H4V8h12v6h-2M6 11h8v6H6z"/></svg>
+                Simpan &amp; cetak
+              </button>
+              <button type="button" class="btn" data-action="save">Simpan</button>
+              <button type="button" class="btn btn--quiet" data-action="new">Nota baru</button>
+            </div>
+            <p class="kbd-hint">Ctrl + S untuk menyimpan</p>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ============ RIWAYAT ============ -->
+      <section id="view-riwayat" class="view" hidden>
+        <div class="history">
+          <div class="filters">
+            <div class="field field--grow">
+              <label for="h-q">Cari</label>
+              <input type="search" id="h-q" placeholder="No. nota, pelanggan, atau nama barang" />
+            </div>
+            <div class="field">
+              <label for="h-store">Toko</label>
+              <select id="h-store"><option value="">Semua toko</option></select>
+            </div>
+            <div class="field">
+              <label for="h-from">Dari</label>
+              <input type="date" id="h-from" />
+            </div>
+            <div class="field">
+              <label for="h-to">Sampai</label>
+              <input type="date" id="h-to" />
+            </div>
+          </div>
+
+          <div id="h-stats" class="stats"></div>
+
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Tanggal</th>
+                  <th>No. nota</th>
+                  <th>Toko</th>
+                  <th>Pelanggan</th>
+                  <th class="num">Barang</th>
+                  <th class="num">Total</th>
+                  <th class="actions-col"><span class="sr-only">Aksi</span></th>
+                </tr>
+              </thead>
+              <tbody id="h-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="print-root"></div>
+  <div id="toast-region" class="toast-region" aria-live="polite"></div>
+
+  <dialog id="confirm-dialog" class="dialog">
+    <form method="dialog">
+      <h3 id="confirm-title"></h3>
+      <p id="confirm-message"></p>
+      <div class="dialog-actions">
+        <button value="cancel" class="btn btn--quiet">Batal</button>
+        <button value="ok" id="confirm-ok" class="btn btn--primary"></button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+/* Handsontable dibuat menyerupai tabel di nota kertas:
+   kepala tabel berwarna tinta toko, garis tipis, angka rata kanan. */
+
+.grid-wrap {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+#grid { width: 100%; }
+
+.handsontable { font-family: var(--font); font-size: var(--step-0); color: var(--text); }
+
+.handsontable td {
+  border-color: var(--line-soft) !important;
+  padding: 0 12px;
+  vertical-align: middle;
+  background: var(--paper);
+}
+.handsontable tr:first-child td { border-top-color: transparent !important; }
+
+/* Kepala kolom */
+.handsontable thead th {
+  height: 44px !important;
+  background: var(--ink) !important;
+  color: #fff;
+  border-color: color-mix(in srgb, #fff 16%, var(--ink)) !important;
+  font-weight: 700;
+  font-size: var(--step--1);
+  letter-spacing: .02em;
+  vertical-align: middle;
+  transition: background-color .4s var(--ease);
+}
+.handsontable thead th .relative { padding: 0 12px; }
+.handsontable thead th .colHeader { line-height: 44px; }
+.handsontable thead th.ht__highlight,
+.handsontable thead th.ht__active_highlight {
+  background: var(--ink) !important;
+  color: #fff;
+  box-shadow: inset 0 -3px 0 var(--accent);
+}
+
+/* Kolom NO (row header) */
+.handsontable tbody th {
+  background: #FAFBFC !important;
+  color: var(--muted);
+  border-color: var(--line-soft) !important;
+  font-weight: 600;
+  vertical-align: middle;
+}
+.handsontable tbody th.ht__highlight { background: var(--accent-soft) !important; color: var(--ink); }
+.handsontable .ht_clone_top_inline_start_corner th,
+.handsontable .ht_clone_top_left_corner th { background: var(--ink) !important; }
+
+/* Sel */
+.handsontable td.htRight { text-align: right; }
+.handsontable td.cell-total { font-weight: 700; color: var(--ink); background: #FAFBFC; }
+.handsontable td.htDimmed { color: var(--ink); }
+.handsontable td.cell-warn { box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--danger) 55%, white); }
+.handsontable td .placeholder { color: #B3BBC5; }
+
+/* Seleksi mengikuti warna aksen toko */
+.handsontable .wtBorder.current,
+.handsontable .wtBorder.area,
+.handsontable .wtBorder.fill { background-color: var(--accent) !important; }
+.handsontable td.area::before,
+.handsontable td.area-1::before { background: var(--accent) !important; opacity: .08 !important; }
+.handsontable td.current { background: var(--paper); }
+
+/* Editor */
+.handsontableInput {
+  font-family: var(--font) !important;
+  font-size: var(--step-0) !important;
+  box-shadow: 0 0 0 2px var(--accent) inset !important;
+  padding: 9px 12px !important;
+  line-height: 20px !important;
+  color: var(--text) !important;
+}
+
+/* Menu klik kanan */
+.htContextMenu .ht_master .wtHolder { border-radius: 10px; }
+.htContextMenu table.htCore { border: 1px solid var(--line) !important; border-radius: 10px; overflow: hidden; font-family: var(--font); }
+.htContextMenu table tbody tr td { padding: 6px 12px; font-size: var(--step--1); }
+.htContextMenu table tbody tr td.current,
+.htContextMenu table tbody tr td.zeroclipboardHover { background: var(--accent-soft) !important; }
