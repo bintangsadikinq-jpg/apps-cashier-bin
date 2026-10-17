@@ -6,7 +6,11 @@ async function request(method, path, body) {
   });
   let data = null;
   try { data = await res.json(); } catch { /* respons kosong */ }
-  if (!res.ok) throw new Error(data?.error || `Gagal menghubungi server (${res.status})`);
+  if (!res.ok) {
+    const err = new Error(data?.error || `Gagal menghubungi server (${res.status})`);
+    err.status = res.status;
+    throw err;
+  }
   return data;
 }
 
@@ -18,6 +22,9 @@ const qs = (params) => {
 };
 
 export const api = {
+  session: () => request('GET', '/api/auth'),
+  login: (password) => request('POST', '/api/auth', { password }),
+  logout: () => request('DELETE', '/api/auth'),
   stores: () => request('GET', '/api/stores'),
   listNotas: (filters = {}) => request('GET', `/api/notas${qs(filters)}`),
   getNota: (id) => request('GET', `/api/notas?id=${id}`),

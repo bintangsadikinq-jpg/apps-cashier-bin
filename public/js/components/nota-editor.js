@@ -114,6 +114,8 @@ export function createNotaEditor(root, { onSaved } = {}) {
       showThanks();
       onSaved?.(saved);
       if (print) await printNota(saved, findStore(saved.storeId));
+      // Kasir tanpa login tidak boleh mengubah nota lama, jadi form dikosongkan untuk nota berikutnya
+      if (!getState().authed) reset();
     } catch (err) {
       toast(err.message, { type: 'error' });
     } finally {

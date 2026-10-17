@@ -1,8 +1,9 @@
 import { api } from './api.js';
-import { setState, subscribe } from './state.js';
+import { getState, setState, subscribe } from './state.js';
 import { createNotaEditor } from './components/nota-editor.js';
 import { createHistory } from './components/history.js';
 import { toast } from './components/toast.js';
+import { ensureLogin } from './components/login.js';
 
 const STORAGE_LABEL = {
   turso: { text: 'Tersimpan di database', cls: 'badge--ok' },
@@ -20,7 +21,17 @@ async function boot() {
        <button class="btn" onclick="location.reload()">Coba lagi</button></div>`;
     return;
   }
-  setState({ stores: info.stores, storage: info.storage });
+  const session = await api.session().catch(() => ({ authed: false }));
+  setState({ stores: info.stores, storage: info.storage, authed: session.authed });
+
+  const logoutBtn = document.getElementById('btn-logout');
+  logoutBtn.hidden = !session.authed;
+  logoutBtn.addEventListener('click', async () => {
+    await api.logout().catch(() => {});
+    setState({ authed: false });
+    toast('Anda sudah keluar');
+    if (location.hash === '#riwayat') location.hash = '#nota';
+  });
 
   const badge = document.getElementById('storage-badge');
   const label = STORAGE_LABEL[info.storage];
@@ -40,7 +51,7 @@ async function boot() {
   };
 
   const editor = createNotaEditor(views.nota, {
-    onSaved: () => history.load(),
+    onSaved: () => { if (getState().authed) history.load(); },
   });
 
   const history = createHistory(views.riwayat, {
@@ -56,11 +67,16 @@ async function boot() {
 
   subscribe((state, patch) => {
     if ('storeId' in patch) editor.onStoreChanged(state.storeId);
+    if ('authed' in patch) logoutBtn.hidden = !state.authed;
   });
 
   // ---- Routing via hash ----
-  function route() {
+  async function route() {
     const name = location.hash.replace('#', '') in views ? location.hash.replace('#', '') : 'nota';
+    if (name === 'riwayat' && !getState().authed && !(await ensureLogin())) {
+      location.hash = '#nota';
+      return;
+    }
     Object.entries(views).forEach(([key, el]) => (el.hidden = key !== name));
     document.querySelectorAll('.tab').forEach((t) => {
       if (t.dataset.view === name) t.setAttribute('aria-current', 'page');

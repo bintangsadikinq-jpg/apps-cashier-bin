@@ -2,6 +2,7 @@
 const state = {
   stores: [],
   storage: null,
+  authed: false,     // sudah login untuk membuka riwayat
   storeId: null,     // toko terpilih di editor
 };
 

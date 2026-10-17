@@ -214,3 +214,7 @@ input:focus, select:focus, textarea:focus {
   .thanks-card img, .thanks-heart, .thanks-spark { animation: none; }
   .thanks-heart, .thanks-spark { display: none; }
 }
+
+/* ---------- Login ---------- */
+.login-error { min-height: 1.2em; color: var(--danger); font-weight: 600; }
+#login-form .field { margin-bottom: 20px; }
